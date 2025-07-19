@@ -63,7 +63,7 @@
                                 <td class="px-4 py-2">{{ $index + 1 }}</td>
                                 <td class="px-4 py-2">{{ $m->customer->nama }}</td>
                                 @if($subKategori == 'Privat')
-                                    <td class="px-4 py-2">{{ $m->pelatih->nama ?? '-' }}</td>
+                                    <td class="px-4 py-2">{{ $m->pelatih->user->name ?? '-' }}</td>
                                 @elseif($subKategori == 'Harian')
                                     <td class="px-4 py-2">{{ $m->tgl_datang }}</td>
                                 @elseif($subKategori == 'Bulanan')

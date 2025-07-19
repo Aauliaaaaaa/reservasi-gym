@@ -68,10 +68,27 @@
                                     @endif
                                 </td>
                                 <td class="px-6 py-4">
-                                     @if($item->status_selesai)
-                                        <span class="px-2 py-1 font-semibold leading-tight text-gray-700 bg-gray-100 rounded-full dark:bg-gray-700 dark:text-gray-100">Selesai</span>
+                                    @if ($item->sub_kategori === 'Privat' || $item->sub_kategori === 'Insidental')
+                                        @if ($item->accepted_trainer)
+                                            @if ($item->status_selesai)
+                                                <span class="px-2 py-1 font-semibold leading-tight text-gray-700 bg-gray-100 rounded-full">Selesai</span>
+                                            @else
+                                                <span class="px-2 py-1 font-semibold leading-tight text-blue-700 bg-blue-100 rounded-full">Aktif</span>
+                                            @endif
+                                        @elseif ($item->accepted_trainer === 0)
+                                            <span class="px-2 py-1 font-semibold leading-tight text-red-500 bg-red-100 rounded-full">Ditolak Pelatih</span>
+                                        @else
+                                            <span class="px-2 py-1 font-semibold leading-tight text-yellow-700 bg-yellow-100 rounded-full">Menunggu Pelatih</span>
+                                        @endif
                                     @else
-                                        <span class="px-2 py-1 font-semibold leading-tight text-blue-700 bg-blue-100 rounded-full dark:bg-blue-700 dark:text-blue-100">Aktif</span>
+                                        @if($item->status_selesai)
+                                            <span class="px-2 py-1 font-semibold leading-tight text-gray-700 bg-gray-100 rounded-full">Selesai</span>
+                                        @else
+                                            <span class="px-2 py-1 font-semibold leading-tight text-blue-700 bg-blue-100 rounded-full">Aktif</span>
+                                        @endif
+                                    @endif
+                                    @if ($item->accepted_trainer === 0)
+                                        <p class="mt-2">Alasan: {{ $item->reason }}</p>
                                     @endif
                                 </td>
                             </tr>

@@ -67,6 +67,46 @@
         </div>
     </div>
 
+    <section class="max-w-5xl mx-auto my-0 p-6 bg-white rounded-2xl shadow-md">
+    @if ($membership->sub_kategori === 'Privat')
+      <div class="mt-6 border p-4 rounded-lg shadow">
+        <h3 class="text-lg font-semibold mb-2">Detail Membership</h3>
+        <table class="w-full text-sm text-left text-black-500">
+          <thead class="text-xs text-gray-700 uppercase bg-gray-50">
+            <tr>
+              <th scope="col" class="px-6 py-3">Tanggal Datang</th>
+              <th scope="col" class="px-6 py-3">Jam Mulai</th>
+              <th scope="col" class="px-6 py-3">Jam Selesai</th>
+              <th scope="col" class="px-6 py-3">Aksi</th>
+            </tr>
+          </thead>
+          <tbody>
+            @foreach($membership->membershipDetails as $detail)
+              <tr class="bg-white border-b hover:bg-gray-50">
+                <td class="px-6 py-4">{{ \Carbon\Carbon::parse($detail->tgl_datang)->translatedFormat('l, d F Y') }}</td>
+                <td class="px-6 py-4">{{ $detail->jam_mulai }}</td>
+                <td class="px-6 py-4">{{ $detail->jam_selesai }}</td>
+                <td class="px-6 py-4">
+                  @if ($membership->accepted_trainer)
+                    @if ($detail->selesai)
+                      <span class="text-green-500">Selesai</span>
+                    @else
+                      <form action="{{ route('booking.selesai.private', [$membership->id, $detail->id]) }}" method="POST" class="inline-block">
+                        @csrf
+                        @method('PATCH')
+                        <button type="submit" class="text-white bg-green-600 hover:bg-green-700 px-3 py-2 rounded-lg text-sm">Selesai</button>
+                      </form>
+                    @endif
+                  @endif
+                </td>
+              </tr>
+            @endforeach
+          </tbody>
+        </table>
+      </div>
+      @endif
+    </section>
+
     @push('scripts')
     {{-- Script untuk fungsionalitas download --}}
     <script>

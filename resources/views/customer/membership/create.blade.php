@@ -10,6 +10,36 @@
                 </p>
             </div>
 
+            <!-- Validation Errors Alert -->
+            <div class="p-6 md:p-8 border-b border-gray-200 dark:border-gray-700">
+                @if ($errors->any())
+                    <div class="mb-4 p-4 bg-red-50 dark:bg-red-900/50 border-l-4 border-red-600 dark:border-red-500 rounded-md">
+                        <div class="flex items-center mb-2">
+                            <svg class="h-5 w-5 text-red-600 dark:text-red-400 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                            </svg>
+                            <h3 class="text-sm font-medium text-red-700 dark:text-red-300">Maaf:</h3>
+                        </div>
+                        <ul class="list-disc pl-5 space-y-1 text-sm text-red-600 dark:text-red-300">
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
+
+                @if (session('success'))
+                    <div class="mb-4 p-4 bg-green-50 dark:bg-green-900/50 border-l-4 border-green-600 dark:border-green-500 rounded-md">
+                        <div class="flex">
+                            <svg class="h-5 w-5 text-green-600 dark:text-green-400 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                            </svg>
+                            <p class="text-sm text-green-700 dark:text-green-300">{{ session('success') }}</p>
+                        </div>
+                    </div>
+                @endif
+            </div>
+
             <form method="POST" action="{{ route('customer.membership.store') }}" enctype="multipart/form-data" class="p-6 md:p-8">
                 @csrf
                 <input type="hidden" name="kategori" value="{{ $kategori_utama }}">
@@ -77,6 +107,43 @@
                             <div id="field-tanggal-tunggal" style="display: none;">
                                 <x-input-label for="tgl_datang" id="label_tgl_datang" :value="__('Tanggal Kedatangan')" />
                                 <x-text-input type="date" name="tgl_datang" class="block w-full mt-1"/>
+
+                            </div>
+                            
+                            <div id="hint-booking-insidental" style="display: none;">
+                                <div class="mt-4 border p-2 rounded-lg border-blue-500 dark:border-blue-600 bg-blue-100">
+                                    <p class="text-sm font-semibold text-blue-500 dark:text-gray-400">
+                                        <svg class="inline h-4 w-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                        </svg>
+                                        Jam latihan: 16.00 - 18.00 WIB
+                                    </p>
+                                </div>
+                            </div>
+
+                            {{-- Field Detail Booking --}}
+                            <div id="field-booking-private" style="display: none">
+                                <div class="flex flex-col gap-4">
+                                    @for ($i = 1; $i <= 10; $i++)
+                                        <div>
+                                            <p class="font-semibold">Pertemuan {{ $i }}</p>
+                                            <div class="grid grid-cols-3 gap-6">
+                                                <div>
+                                                    <x-input-label for="tgl_datang" id="label_tgl_datang" :value="__('Tanggal Kedatangan')" />
+                                                    <x-text-input type="date" name="tgl_datang_private[]" class="block w-full mt-1"/>
+                                                </div>
+                                                <div>
+                                                    <x-input-label for="jam_mulai" id="label_jam_mulai" :value="__('Jam Mulai')" />
+                                                    <x-text-input type="time" name="jam_mulai_private[]" class="block w-full mt-1 jam-mulai"/>
+                                                </div>
+                                                <div>
+                                                    <x-input-label for="jam_selesai" id="label_jam_selesai" :value="__('Jam Selesai')" />
+                                                    <x-text-input type="time" name="jam_selesai_private[]" class="block w-full mt-1 jam-selesai" disabled/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    @endfor
+                                </div>
                             </div>
 
                             <!-- Penampil Harga -->
@@ -125,6 +192,8 @@ document.addEventListener('DOMContentLoaded', function () {
     const displayHarga = document.getElementById('display-harga');
     const hargaTeks = document.getElementById('harga-teks');
     const hiddenSubKategori = document.getElementById('hidden_sub_kategori');
+    const fieldBookingPrivate = document.getElementById('field-booking-private');
+    const hintBookingInsidental = document.getElementById('hint-booking-insidental');
     
     // === DATA DARI SERVER (BLADE) ===
     const semuaPaket = @json($paket);
@@ -219,6 +288,8 @@ document.addEventListener('DOMContentLoaded', function () {
         tglRentangField.style.display = 'none';
         tglTunggalField.style.display = 'none';
         displayHarga.style.display = 'none';
+        fieldBookingPrivate.style.display = 'none';
+        hintBookingInsidental.style.display = 'none';
         pelatihSelect.innerHTML = '<option value="">-- Pilih Pelatih --</option>';
 
         if (!paketId) return;
@@ -230,13 +301,25 @@ document.addEventListener('DOMContentLoaded', function () {
         displayHarga.style.display = 'block';
         document.getElementById("info-transfer").style.display = "block";
 
+        if (paketNama.includes('privat')) {
+            fieldBookingPrivate.style.display = 'block';
+        } else {
+            fieldBookingPrivate.style.display = 'none';
+        }
+
+        if (paketNama.includes('insidental')) {
+            hintBookingInsidental.style.display = 'block';
+        } else {
+            hintBookingInsidental.style.display = 'none';
+        }
+
         if (paketNama.includes('privat') || paketNama.includes('insidental')) {
             pelatihField.style.display = 'block';
             const pelatihTersedia = semuaPelatih.filter(p => p.paket_id == paketId); 
             pelatihTersedia.forEach(pelatih => {
                 const option = document.createElement('option');
                 option.value = pelatih.id;
-                option.textContent = pelatih.nama;
+                option.textContent = pelatih.user.name;
                 pelatihSelect.appendChild(option);
             });
         }
@@ -247,6 +330,39 @@ document.addEventListener('DOMContentLoaded', function () {
             const kategoriUtama = "{{ $kategori_utama }}";
             labelTglTunggal.textContent = `Tanggal ${kategoriUtama}`;
             tglTunggalField.style.display = 'block';
+        }
+    });
+
+    // === EVENT LISTENER: AUTO CALCULATE JAM SELESAI ===
+    document.addEventListener('change', function(e) {
+        if (e.target.classList.contains('jam-mulai')) {
+            const jamMulaiInput = e.target;
+            const jamMulaiValue = jamMulaiInput.value;
+            
+            if (jamMulaiValue) {
+                // Find the corresponding jam_selesai input in the same row
+                const parentDiv = jamMulaiInput.closest('.grid');
+                const jamSelesaiInput = parentDiv.querySelector('.jam-selesai');
+                
+                if (jamSelesaiInput) {
+                    // Calculate one hour later
+                    const [hours, minutes] = jamMulaiValue.split(':');
+                    const startTime = new Date();
+                    startTime.setHours(parseInt(hours), parseInt(minutes), 0);
+                    
+                    // Add one hour
+                    startTime.setHours(startTime.getHours() + 1);
+                    
+                    // Format back to HH:MM
+                    const endHours = startTime.getHours().toString().padStart(2, '0');
+                    const endMinutes = startTime.getMinutes().toString().padStart(2, '0');
+                    const jamSelesaiValue = `${endHours}:${endMinutes}`;
+                    
+                    // Set the value and enable the input
+                    jamSelesaiInput.value = jamSelesaiValue;
+                    jamSelesaiInput.disabled = false;
+                }
+            }
         }
     });
 });

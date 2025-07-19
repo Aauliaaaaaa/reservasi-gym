@@ -12,6 +12,8 @@ use App\Http\Controllers\PaketController;
 use App\Http\Controllers\PelatihController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SyaratKetentuanController;
+use App\Http\Controllers\Trainer\BookingController;
+use App\Http\Controllers\Trainer\DashboardController as TrainerDashboardController;
 use App\Http\Controllers\WelcomeController;
 use Illuminate\Support\Facades\Route;
 
@@ -78,6 +80,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
         //pelatih
         Route::resource('pelatih', PelatihController::class)->except(['create', 'show', 'edit']);
+        Route::get('/pelatih/kelola-akun', [PelatihController::class, 'kelolaAkun'])->name('pelatih.kelola_akun');
+        Route::post('/pelatih/kelola-akun', [PelatihController::class, 'kelolaAkunStore'])->name('pelatih.kelola_akun.store');
+        Route::delete('/pelatih/kelola-akun/{id}', [PelatihController::class, 'kelolaAkunDestroy'])->name('pelatih.kelola_akun.destroy');
+        Route::put('/pelatih/kelola-akun/{id}', [PelatihController::class, 'kelolaAkunUpdate'])->name('pelatih.kelola_akun.update');
     });
 
     // Grup Route untuk Owner
@@ -108,21 +114,34 @@ Route::middleware(['auth', 'verified'])->group(function () {
         
         //membership
         Route::prefix('membership')->name('membership.')->group(function () {
-        Route::get('/gym', [MembershipCustomerController::class, 'createGym'])->name('gym.create');
-        Route::get('/muaythai', [MembershipCustomerController::class, 'createMuayThai'])->name('muaythai.create');
-        Route::get('/boxing', [MembershipCustomerController::class, 'createBoxing'])->name('boxing.create');
-        Route::post('/', [MembershipCustomerController::class, 'store'])->name('store');
-    });
-        // TAMBAHKAN GRUP ROUTE INI UNTUK BUKTI RESERVASI
-    Route::prefix('reservasi')->name('reservasi.')->group(function() {
-        Route::get('/', [MembershipCustomerController::class, 'index'])->name('index');
-        Route::get('/{membership}', [MembershipCustomerController::class, 'show'])->name('show');
-        Route::get('/{membership}/edit', [MembershipCustomerController::class, 'edit'])->name('edit');
-        Route::put('/{membership}', [MembershipCustomerController::class, 'update'])->name('update');
-        Route::put('/{membership}/selesai', [MembershipCustomerController::class, 'markAsComplete'])->name('complete');
-    });
+            Route::get('/gym', [MembershipCustomerController::class, 'createGym'])->name('gym.create');
+            Route::get('/muaythai', [MembershipCustomerController::class, 'createMuayThai'])->name('muaythai.create');
+            Route::get('/boxing', [MembershipCustomerController::class, 'createBoxing'])->name('boxing.create');
+            Route::post('/', [MembershipCustomerController::class, 'store'])->name('store');
+        });
+            // TAMBAHKAN GRUP ROUTE INI UNTUK BUKTI RESERVASI
+        Route::prefix('reservasi')->name('reservasi.')->group(function() {
+            Route::get('/', [MembershipCustomerController::class, 'index'])->name('index');
+            Route::get('/{membership}', [MembershipCustomerController::class, 'show'])->name('show');
+            Route::get('/{membership}/edit', [MembershipCustomerController::class, 'edit'])->name('edit');
+            Route::get('/{membership}/edit-privat', [MembershipCustomerController::class, 'editPrivat'])->name('edit.privat');
+            Route::put('/{membership}/edit-privat', [MembershipCustomerController::class, 'editPrivatUpdate'])->name('edit.privat.update');
+            Route::put('/{membership}', [MembershipCustomerController::class, 'update'])->name('update');
+            Route::put('/{membership}/selesai', [MembershipCustomerController::class, 'markAsComplete'])->name('complete');
+        });
     });
 
+    // Grup Route untuk Pelatih
+    Route::middleware(['role:pelatih'])->prefix('trainer')->name('trainer.')->group(function () {
+        Route::get('/', [TrainerDashboardController::class, 'index'])->name('dashboard.index');
+        Route::get('/booking', [BookingController::class, 'index'])->name('booking.index');
+        Route::get('/booking/{membership}', [BookingController::class, 'detail'])->name('booking.detail');
+        Route::patch('/booking/{membership}/accept', [BookingController::class, 'accept'])->name('booking.accept');
+        Route::patch('/booking/{membership}/reject', [BookingController::class, 'reject'])->name('booking.reject');
+        Route::patch('/booking/{membership}/selesai', [BookingController::class, 'selesai'])->name('booking.selesai');
+    });
+
+    Route::patch('/booking/{membership}/{detail}/selesai', [BookingController::class, 'selesaiPrivate'])->name('booking.selesai.private');
 });
 
 require __DIR__ . '/auth.php';

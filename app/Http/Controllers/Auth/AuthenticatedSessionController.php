@@ -36,6 +36,8 @@ class AuthenticatedSessionController extends Controller
         return redirect()->intended('/owner');
     } elseif ($user->hasRole('customer')) {
         return redirect()->intended('/customer/dashboard');
+    } elseif ($user->hasRole('pelatih')) {
+        return redirect()->intended('/trainer');
     }
 
     // fallback jika tidak punya role

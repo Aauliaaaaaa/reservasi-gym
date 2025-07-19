@@ -20,7 +20,7 @@
                 <tbody>
                     @foreach ($pelatih as $item)
                         <tr class="bg-white border-b hover:bg-gray-50">
-                            <td class="px-6 py-4 font-medium text-gray-900">{{ $item->nama }}</td>
+                            <td class="px-6 py-4 font-medium text-gray-900">{{ $item->user->name }}</td>
                             <td class="px-6 py-4">{{ $item->paket->nama ?? '-' }}</td>
                             <td class="px-6 py-4">{{ $item->no_telp }}</td>
                             <td class="px-6 py-4">{{ $item->alamat }}</td>
@@ -45,9 +45,13 @@
                                     <form method="POST" action="{{ route('pelatih.update', $item->id) }}">
                                         @csrf
                                         @method('PUT')
-                                        <div class="mb-4">
-                                            <label class="block mb-2 text-sm font-medium text-gray-900">Nama</label>
-                                            <input type="text" name="nama" value="{{ $item->nama }}" class="w-full border rounded-lg p-2" required>
+                                        <div class="mb-3">
+                                            <label class="block mb-2 text-sm font-medium text-gray-900">Pilih Akun Pelatih</label>
+                                            <select name="pelatih_id" class="w-full border rounded-lg p-2" required>
+                                                @foreach ($userPelatih as $p)
+                                                    <option value="{{ $p->id }}" {{ $item->user_id == $p->id ? 'selected' : '' }}>{{ $p->name }}</option>
+                                                @endforeach
+                                            </select>
                                         </div>
                                         <div class="mb-4">
                                             <label class="block mb-2 text-sm font-medium text-gray-900">Kategori Pelatih</label>
@@ -85,16 +89,12 @@
                 <form method="POST" action="{{ route('pelatih.store') }}">
                     @csrf
                     <div class="mb-4">
-                        <label class="block mb-2 text-sm font-medium text-gray-900">Nama</label>
-                        <input type="text" name="name" class="w-full border rounded-lg p-2" required>
-                    </div>
-                    <div class="mb-4">
-                        <label class="block mb-2 text-sm font-medium text-gray-900">Email</label>
-                        <input type="email" name="email" class="w-full border rounded-lg p-2" required>
-                    </div>
-                    <div class="mb-4">
-                        <label class="block mb-2 text-sm font-medium text-gray-900">Password</label>
-                        <input type="password" name="password" class="w-full border rounded-lg p-2" required>
+                        <label class="block mb-2 text-sm font-medium text-gray-900">Pilih Akun Pelatih</label>
+                        <select name="pelatih_id" class="w-full border rounded-lg p-2" required>
+                            @foreach ($userPelatih as $p)
+                                <option value="{{ $p->id }}">{{ $p->name }}</option>
+                            @endforeach
+                        </select>
                     </div>
                     <div class="mb-4">
                         <label class="block mb-2 text-sm font-medium text-gray-900">Kategori Pelatih</label>

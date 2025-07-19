@@ -23,4 +23,14 @@ class Pelatih extends Model
     {
         return $this->belongsTo(Paket::class, 'paket_id');
     }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
+
+    public function memberships()
+    {
+        return $this->hasMany(Membership::class, 'pelatih_id');
+    }
 }

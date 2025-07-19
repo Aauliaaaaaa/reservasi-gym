@@ -16,25 +16,26 @@ class RoleSeeder extends Seeder
         $adminRole = Role::firstOrCreate(['name' => 'admin']);
         $ownerRole = Role::firstOrCreate(['name' => 'owner']);
         $customerRole = Role::firstOrCreate(['name' => 'customer']);
+        $pelatihRole = Role::firstOrCreate(['name' => 'pelatih']);
 
         // Admin
         $admin = User::firstOrCreate(
             ['email' => 'admin@gmail.com'],
-            ['name' => 'Admin', 'password' => bcrypt('admin123')]
+            ['name' => 'Admin', 'password' => bcrypt('admin123'), 'email_verified_at' => now()],
         );
         $admin->assignRole($adminRole);
 
         // Owner
         $owner = User::firstOrCreate(
             ['email' => 'owner@gmail.com'],
-            ['name' => 'Owner', 'password' => bcrypt('owner123')]
+            ['name' => 'Owner', 'password' => bcrypt('owner123'), 'email_verified_at' => now()]
         );
         $owner->assignRole($ownerRole);
 
         // Customer
         $customer = User::firstOrCreate(
             ['email' => 'customer@gmail.com'],
-            ['name' => 'Customer', 'password' => bcrypt('customer123')]
+            ['name' => 'Customer', 'password' => bcrypt('customer123'), 'email_verified_at' => now()]
         );
         $customer->assignRole($customerRole);
 

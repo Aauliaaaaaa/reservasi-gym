@@ -25,10 +25,27 @@
                                 <td class="px-6 py-4 font-medium text-gray-900">{{ $item->paket->nama ?? ($item->kategori . ' ' . $item->sub_kategori) }}</td>
                                 <td class="px-6 py-4">{{ $item->created_at->format('d M Y') }}</td>
                                 <td class="px-6 py-4">
-                                    @if($item->status_selesai)
-                                        <span class="px-2 py-1 font-semibold leading-tight text-gray-700 bg-gray-100 rounded-full">Selesai</span>
+                                    @if ($item->sub_kategori === 'Privat' || $item->sub_kategori === 'Insidental')
+                                        @if ($item->accepted_trainer)
+                                            @if ($item->status_selesai)
+                                                <span class="px-2 py-1 font-semibold leading-tight text-gray-700 bg-gray-100 rounded-full">Selesai</span>
+                                            @else
+                                                <span class="px-2 py-1 font-semibold leading-tight text-blue-700 bg-blue-100 rounded-full">Aktif</span>
+                                            @endif
+                                        @elseif ($item->accepted_trainer === 0)
+                                            <span class="px-2 py-1 font-semibold leading-tight text-red-500 bg-red-100 rounded-full">Ditolak Pelatih</span>
+                                        @else
+                                            <span class="px-2 py-1 font-semibold leading-tight text-yellow-700 bg-yellow-100 rounded-full">Menunggu Pelatih</span>
+                                        @endif
                                     @else
-                                        <span class="px-2 py-1 font-semibold leading-tight text-blue-700 bg-blue-100 rounded-full">Aktif</span>
+                                        @if($item->status_selesai)
+                                            <span class="px-2 py-1 font-semibold leading-tight text-gray-700 bg-gray-100 rounded-full">Selesai</span>
+                                        @else
+                                            <span class="px-2 py-1 font-semibold leading-tight text-blue-700 bg-blue-100 rounded-full">Aktif</span>
+                                        @endif
+                                    @endif
+                                    @if ($item->accepted_trainer === 0)
+                                        <p class="mt-2">Alasan: {{ $item->reason }}</p>
                                     @endif
                                 </td>
                                 <td class="px-6 py-4 flex justify-center items-center gap-2">
@@ -38,6 +55,10 @@
                                         {{-- PERBAIKAN: Tombol hanya muncul jika bukan paket Privat --}}
                                         @if(strtolower($item->sub_kategori) != 'privat')
                                             <a href="{{ route('customer.reservasi.edit', $item->id) }}" class="font-medium text-white bg-yellow-500 hover:bg-yellow-600 px-3 py-1.5 rounded-lg text-xs">Ubah Jadwal</a>
+                                        @else
+                                            @if ($item->accepted_trainer === 0)
+                                                <a href="{{ route('customer.reservasi.edit.privat', $item->id) }}" class="font-medium text-white bg-yellow-500 hover:bg-yellow-600 px-3 py-1.5 rounded-lg text-xs">Ubah Reservasi</a>
+                                            @endif
                                         @endif
                                         <form action="{{ route('customer.reservasi.complete', $item->id) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin sesi ini sudah selesai?');">
                                             @csrf

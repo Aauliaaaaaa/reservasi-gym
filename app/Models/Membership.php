@@ -22,6 +22,8 @@ class Membership extends Model
         'bukti_bayar',
         'status',
         'status_selesai', // Pastikan 'status' ada di fillable
+        'accepted_trainer',
+        'reason',
     ];
 
     // Relasi tetap sama
@@ -38,5 +40,10 @@ class Membership extends Model
     public function paket()
     {
         return $this->belongsTo(Paket::class);
+    }
+
+    public function membershipDetails()
+    {
+        return $this->hasMany(MembershipDetail::class, 'membership_id');
     }
 }

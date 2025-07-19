@@ -164,6 +164,7 @@ class CustomerController extends Controller
             'name' => $request->no_telp,
             'email' => $request->no_telp . '@gmail.com',
             'password' => Hash::make($request->no_telp),
+            'email_verified_at' => now(),
         ]);
         $user->assignRole('customer');
         $validated['user_id'] = $user->id;

@@ -30,6 +30,9 @@ return new class extends Migration
             $table->string('status')->default('belum lunas'); // Status pembayaran, default 'belum lunas'
             $table->boolean('status_selesai')->default(false);
 
+            $table->boolean('accepted_trainer')->nullable(); // Menandakan apakah pelatih telah menerima permintaan ini
+            $table->text('reason')->nullable(); // Keterangan tambahan, bisa kosong
+
             $table->timestamps(); // created_at dan updated_at
         });
     }
