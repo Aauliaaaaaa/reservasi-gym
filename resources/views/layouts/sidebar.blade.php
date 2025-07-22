@@ -299,9 +299,9 @@
                     </li>
                      <li>
                         <a href="{{ route('trainer.jadwal') }}" class="flex items-center p-2 rounded-lg group
-                            {{ request()->routeIs('trainer.booking.*') ? 'text-blue-600 bg-gray-100 dark:bg-gray-700 dark:text-white' : 'text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700' }}">
+                            {{ request()->routeIs('trainer.jadwal') ? 'text-blue-600 bg-gray-100 dark:bg-gray-700 dark:text-white' : 'text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700' }}">
                             <svg class="shrink-0 w-5 h-5 text-gray-500 transition duration-75 group-hover:text-gray-900 dark:text-gray-400 dark:group-hover:text-white
-                                {{ request()->routeIs('trainer.booking.*') ? 'text-blue-600 dark:text-white' : '' }}"
+                                {{ request()->routeIs('trainer.jadwal') ? 'text-blue-600 dark:text-white' : '' }}"
                                 xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
                                 <path d="M10 2a5 5 0 1 0 0 10A5 5 0 0 0 10 2Zm0 12c-3.33 0-6 1.34-6 3v1h12v-1c0-1.66-2.67-3-6-3Z"/>
                             </svg>

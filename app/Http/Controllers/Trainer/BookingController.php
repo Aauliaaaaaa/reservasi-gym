@@ -64,7 +64,7 @@ class BookingController extends Controller
             'status_selesai' => true,
         ]);
 
-        return redirect()->route('trainer.booking.index')->with('success', 'Booking completed successfully.');
+        return redirect()->back()->with('success', 'Booking completed successfully.');
     }
 
     public function selesaiPrivate(Request $request, $membership, $detail)
