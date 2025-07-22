@@ -9,7 +9,6 @@
                     <th scope="col" class="px-6 py-3">Nama Customer</th>
                     <th scope="col" class="px-6 py-3">Paket</th>
                     <th scope="col" class="px-6 py-3">Jenis Kelamin</th>
-                    <th scope="col" class="px-6 py-3">Status Selesai</th>
                     <th scope="col" class="px-6 py-3">Status Diterima</th>
                     <th scope="col" class="px-6 py-3 text-center">Aksi</th>
                 </tr>

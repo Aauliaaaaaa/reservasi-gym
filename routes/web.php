@@ -14,6 +14,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SyaratKetentuanController;
 use App\Http\Controllers\Trainer\BookingController;
 use App\Http\Controllers\Trainer\DashboardController as TrainerDashboardController;
+use App\Http\Controllers\TrainerJadwalController;
 use App\Http\Controllers\WelcomeController;
 use Illuminate\Support\Facades\Route;
 
@@ -139,6 +140,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::patch('/booking/{membership}/accept', [BookingController::class, 'accept'])->name('booking.accept');
         Route::patch('/booking/{membership}/reject', [BookingController::class, 'reject'])->name('booking.reject');
         Route::patch('/booking/{membership}/selesai', [BookingController::class, 'selesai'])->name('booking.selesai');
+        Route::get('/trainer/jadwal', [TrainerJadwalController::class, 'index'])->name('jadwal');
+        Route::patch('/trainer/jadwal/{membershipDetail}/selesai', [TrainerJadwalController::class, 'selesai'])->name('jadwal.selesai');
+
     });
 
     Route::patch('/booking/{membership}/{detail}/selesai', [BookingController::class, 'selesaiPrivate'])->name('booking.selesai.private');
